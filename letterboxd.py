@@ -11,30 +11,35 @@ class LetterBox(object):
         for word in words:
             letters = self.top + self.right + self.bottom + self.left
 
-            if all(letter in letters for letter in word) and not has_consecutive_side_letters(word):
+            if all(letter in letters for letter in word) and not self.has_consecutive_side_letters(word):
                 filtered_words.append(word)
 
         return filtered_words
-    
+
     def has_consecutive_side_letters(self, word):
         # In progress
         last_side = "none"
         this_side = "none"
 
         for letter in word:
-            
+            last_side = this_side
+
             if letter in self.top:
-                last_side = "top"
+                this_side = "top"
             elif letter in self.right:
-                last_side = "right"
+                this_side = "right"
             elif letter in self.bottom:
-                last_side = "bottom"
+                this_side = "bottom"
             elif letter in self.left:
-                last_side = "left"
-        
-        return True
+                this_side = "left"
+            else:
+                # should never arrive here
+                return True
 
+            if last_side == this_side and not ("none" in [last_side, this_side]):
+                return True
 
+        return False
 
     def __str__(self):
         res = "  " + " ".join(self.top) + " \n\n"
@@ -51,19 +56,6 @@ class LetterBox(object):
 def load_word_list(filename):
     with open(filename, 'r') as f:
         return [word.strip().upper() for word in f]
-
-
-# def filter_words(words, box_letters):
-#     filtered_words = []
-#     for word in words:
-#         if all(letter in box_letters for letter in word) and not has_consecutive_letters_from_same_side(word, box_letters):
-#             filtered_words.append(word)
-#     return filtered_words
-
-
-# def has_consecutive_letters_from_same_side(word, box_letters):
-#     # Implement logic to check for consecutive letters from the same side
-#     # Consider using a dictionary to map letters to their sides
 
 
 # def generate_word_chains(words, starting_letter, current_chain, min_length):
